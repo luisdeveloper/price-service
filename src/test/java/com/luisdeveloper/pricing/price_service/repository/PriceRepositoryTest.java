@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -34,18 +32,10 @@ public class PriceRepositoryTest {
 	private Price pMaxPriority = new Price(1, 1, 2, startDate, endDate, maxPriority, BigDecimal.ONE, "EUR");
 	private Price pNoConflict = new Price(1, 2, 3, startDate, endDate, minPriority, BigDecimal.ZERO, "EUR");
 
-	@BeforeEach
-	void init() {
-		repository.saveAll(List.of(pMinPriority, pMaxPriority, pNoConflict));
-	}
-
-	@AfterEach
-	void clean() {
-		repository.deleteAll();
-	}
-
 	@Test
 	public void given_date_compatible_with_overlaping_priceLists_when_invocking_findTopByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc_then_returns_price_equal_to_pMaxPriority() {
+		//given
+		repository.saveAll(List.of(pMinPriority,pMaxPriority));
 		// when
 		var result = repository
 				.findTopByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(1,
@@ -59,6 +49,8 @@ public class PriceRepositoryTest {
 
 	@Test
 	public void given_valid_productId_and_brandId_and_date_compatible_with_one_priceList_when_invocking_findTopByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc_then_returns_price_equal_to_pNoConflict() {
+		//given
+		repository.save(pNoConflict);
 		// when
 		var result = repository
 				.findTopByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(1,
