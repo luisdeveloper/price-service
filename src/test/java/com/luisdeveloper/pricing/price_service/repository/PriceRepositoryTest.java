@@ -1,6 +1,7 @@
 package com.luisdeveloper.pricing.price_service.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
@@ -14,7 +15,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.luisdeveloper.pricing.price_service.entity.Price;
-
 
 @DataJpaTest
 @Transactional
@@ -33,42 +33,34 @@ public class PriceRepositoryTest {
 	private Price pNoConflict = new Price(1, 2, 3, startDate, endDate, minPriority, BigDecimal.ZERO, "EUR");
 
 	@Test
-	public void given_date_compatible_with_overlaping_priceLists_when_invocking_findTopByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc_then_returns_price_equal_to_pMaxPriority() {
-		//given
-		repository.saveAll(List.of(pMinPriority,pMaxPriority));
+	public void given_date_compatible_with_overlaping_priceLists_when_invocking_findApplicablePrices_then_returns_price_equal_to_pMaxPriority() {
+		// given
+		repository.saveAll(List.of(pMinPriority, pMaxPriority));
 		// when
-		var result = repository
-				.findTopByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(1,
-						1, LocalDateTime.now(), LocalDateTime.now());
+		var result = repository.findApplicablePrices(1, 1, LocalDateTime.now());
 
 		// then
-		assertTrue(result.isPresent());
-		assertEquals(pMaxPriority.getPriceList(), result.get().getPriceList());
-		assertEquals(maxPriority, result.get().getPriority());
+		assertNotNull(result);
+		assertEquals(pMaxPriority.getPriceList(), result.get(0).getPriceList());
+		assertEquals(maxPriority, result.get(0).getPriority());
 	}
 
 	@Test
-	public void given_valid_productId_and_brandId_and_date_compatible_with_one_priceList_when_invocking_findTopByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc_then_returns_price_equal_to_pNoConflict() {
-		//given
+	public void given_valid_productId_and_brandId_and_date_compatible_with_one_priceList_when_invocking_findApplicablePrices_then_returns_price_equal_to_pNoConflict() {
+		// given
 		repository.save(pNoConflict);
 		// when
-		var result = repository
-				.findTopByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(1,
-						2, startDate.plusDays(1),
-						startDate.plusDays(1));
+		var result = repository.findApplicablePrices(1, 2, startDate.plusDays(1));
 
 		// then
-		assertTrue(result.isPresent());
-		assertEquals(pNoConflict.getPriceList(), result.get().getPriceList());
+		assertNotNull(result);
+		assertEquals(pNoConflict.getPriceList(), result.get(0).getPriceList());
 	}
 
 	@Test
-	public void given_valid_productId_and_brandId_and_date_not_compatible_with_any_priceList_when_invocking_findTopByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc_then_returns_empty() {
+	public void given_valid_productId_and_brandId_and_date_not_compatible_with_any_priceList_when_invocking_findApplicablePrices_then_returns_empty() {
 		// when
-		var result = repository
-				.findTopByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(1,
-						2, LocalDateTime.now().minus(5, ChronoUnit.WEEKS),
-						LocalDateTime.now().minus(5, ChronoUnit.WEEKS));
+		var result = repository.findApplicablePrices(1, 2, LocalDateTime.now().minus(5, ChronoUnit.WEEKS));
 
 		// then
 		assertTrue(result.isEmpty());

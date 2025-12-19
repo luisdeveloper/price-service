@@ -20,8 +20,8 @@ public class PriceServiceImpl implements PriceService {
 	@Override
 	public Optional<PriceResponseDto> getApplicablePrice(PriceQueryDto dto) {
 		return  repository
-				.findTopByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(
-						dto.brandId(), dto.productId(), dto.applicationDate(), dto.applicationDate()).map(x->toDto(x));
+				.findApplicablePrices(
+						dto.brandId(), dto.productId(), dto.applicationDate()).stream().limit(1).map(x->toDto(x)).findFirst();
 		
 	}
 
