@@ -35,3 +35,5 @@ If multiple tariffs apply for a given date, the one with the highest priority is
 
 - Controller integration tests (`PriceControllerIT`) reproduce the cases described in the exercise statement using a fixed dataset defined in `data.sql`.
 - Repository integration tests are self-contained and rely on automatic transaction rollback to guarantee isolation between tests.
+- Unit tests available in `PriceServiceTest` verify the correct filtering logic applied by the service layer.
+
