@@ -115,8 +115,8 @@ class PriceServiceTest {
             "EUR"
         );
 
-        // IMPORTANTE:
-        // la lista ya viene ordenada por prioridad DESC desde el repository
+        // IMPORTANT:
+        // list comes already sorted from repository
         when(repository.findApplicablePrices(
             queryDto.brandId(),
             queryDto.productId(),
