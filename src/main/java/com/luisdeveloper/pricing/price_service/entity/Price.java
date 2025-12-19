@@ -120,5 +120,5 @@ public class Price {
 	public void setCurr(String curr) {
 		this.curr = curr;
 	}
-
+	
 }

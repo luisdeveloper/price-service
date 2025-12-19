@@ -13,10 +13,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.luisdeveloper.pricing.price_service.entity.Price;
 
+
 @DataJpaTest
+@Transactional
 public class PriceRepositoryTest {
 
 	@Autowired

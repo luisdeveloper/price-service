@@ -21,6 +21,7 @@ public class PriceController {
 	@GetMapping("price/applicable-price")
 	public ResponseEntity<PriceResponseDto> getApplicablePrice(@RequestParam LocalDateTime applicationDate, @RequestParam Integer brandId, @RequestParam Integer productId) {
 		var dto = new PriceQueryDto(applicationDate, brandId, productId);
-		return ResponseEntity.of(service.getApplicablePrice(dto));
+		final ResponseEntity<PriceResponseDto> response = ResponseEntity.of(service.getApplicablePrice(dto));
+		return response;
 	}
 }

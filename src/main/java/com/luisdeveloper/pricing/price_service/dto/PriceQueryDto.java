@@ -6,5 +6,5 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-public record PriceQueryDto(@NotNull LocalDateTime applicationDate, @NotNull Integer productId, @NotNull Integer brandId) {
+public record PriceQueryDto(@NotNull LocalDateTime applicationDate, @NotNull Integer brandId, @NotNull Integer productId) {
 }
